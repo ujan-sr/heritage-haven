@@ -1,96 +1,132 @@
+/**
+ * HOUSE OF SWASS — DESIGN SYSTEM
+ * 
+ * This file defines the complete visual identity of the app.
+ * All colors, fonts, shadows, and animations are controlled here.
+ * 
+ * COLOR PHILOSOPHY:
+ * - Midnight Indigo (#0B1220) → Primary shell, navigation, deep backgrounds
+ * - Velvet Maroon (#7B3230) → CTAs, buttons, interactive accents
+ * - Antique Gold (#D7B47A) → Highlights, borders, luxurious details
+ * - Vintage Cream (#F3E7D9) → Content cards, text surfaces, paper feel
+ * - Heritage Teal (#2F4F4F) → Secondary accents, subtle depth
+ * 
+ * TYPOGRAPHY:
+ * - DM Serif Display → Main titles, hero text
+ * - Cormorant Garamond → Subheadings, elegant body
+ * - Space Grotesk → UI text, body content
+ * - Parisienne → Dates, captions, decorative script
+ * 
+ * TO MODIFY:
+ * - Change primary brand color → update --primary HSL values
+ * - Adjust card warmth → modify --card HSL lightness
+ * - Intensify gold accents → increase --gold saturation
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&family=Parisienne&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* ═══════════════════════════════════════════════════════════════
+       MIDNIGHT INDIGO — The deep shell of the house
+       Used for: main background, navigation, overlays
+       To darken: decrease lightness (currently 9%)
+       To add blue: increase hue toward 220
+    ═══════════════════════════════════════════════════════════════ */
+    --background: 220 40% 9%;
+    --foreground: 35 30% 92%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* ═══════════════════════════════════════════════════════════════
+       VINTAGE CREAM — Paper-like surfaces for content
+       Used for: cards, modals, content areas
+       To warm up: increase hue toward 40
+       To brighten: increase lightness
+    ═══════════════════════════════════════════════════════════════ */
+    --card: 35 45% 93%;
+    --card-foreground: 220 40% 12%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* ═══════════════════════════════════════════════════════════════
+       VELVET MAROON — Rich, luxurious action color
+       Used for: primary buttons, CTAs, important actions
+       To deepen: decrease lightness
+       To redden: decrease hue toward 0
+    ═══════════════════════════════════════════════════════════════ */
+    --primary: 2 42% 34%;
+    --primary-foreground: 35 30% 95%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* ═══════════════════════════════════════════════════════════════
+       ANTIQUE GOLD — Luxurious accent and highlight
+       Used for: borders, icons, decorative elements
+       To brighten: increase lightness
+       To saturate: increase saturation above 50%
+    ═══════════════════════════════════════════════════════════════ */
+    --gold: 38 52% 66%;
+    --gold-muted: 38 35% 50%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* ═══════════════════════════════════════════════════════════════
+       HERITAGE TEAL — Subtle secondary depth
+       Used for: secondary buttons, subtle accents
+    ═══════════════════════════════════════════════════════════════ */
+    --secondary: 180 25% 31%;
+    --secondary-foreground: 35 30% 95%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 30% 18%;
+    --muted-foreground: 35 20% 70%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 38 52% 66%;
+    --accent-foreground: 220 40% 12%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 35 30% 95%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 38 30% 35%;
+    --input: 220 30% 20%;
+    --ring: 38 52% 66%;
 
-    --radius: 0.5rem;
+    --popover: 220 35% 12%;
+    --popover-foreground: 35 30% 92%;
 
-    --sidebar-background: 0 0% 98%;
+    --radius: 0.75rem;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* ═══════════════════════════════════════════════════════════════
+       NAVIGATION — Left panel styling
+       Deep indigo with subtle gold accents
+    ═══════════════════════════════════════════════════════════════ */
+    --sidebar-background: 220 45% 8%;
+    --sidebar-foreground: 35 30% 85%;
+    --sidebar-primary: 38 52% 66%;
+    --sidebar-primary-foreground: 220 40% 12%;
+    --sidebar-accent: 220 35% 15%;
+    --sidebar-accent-foreground: 35 30% 92%;
+    --sidebar-border: 38 25% 25%;
+    --sidebar-ring: 38 52% 66%;
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* ═══════════════════════════════════════════════════════════════
+       CUSTOM SHADOWS — Lamp-lit depth simulation
+       These create the atmospheric lighting feel
+       To intensify: increase spread and opacity
+    ═══════════════════════════════════════════════════════════════ */
+    --shadow-warm: 0 10px 40px -10px hsla(38, 52%, 40%, 0.3);
+    --shadow-deep: 0 25px 50px -12px hsla(220, 40%, 5%, 0.6);
+    --shadow-glow: 0 0 60px hsla(38, 60%, 50%, 0.15);
 
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* ═══════════════════════════════════════════════════════════════
+       GRADIENTS — Atmospheric overlays
+    ═══════════════════════════════════════════════════════════════ */
+    --gradient-midnight: linear-gradient(180deg, hsl(220 40% 9% / 0.95) 0%, hsl(220 45% 6% / 0.98) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(38 52% 66%) 0%, hsl(38 45% 55%) 100%);
+    --gradient-maroon: linear-gradient(135deg, hsl(2 42% 34%) 0%, hsl(2 50% 28%) 100%);
+    --gradient-vignette: radial-gradient(ellipse at center, transparent 0%, hsl(220 40% 5% / 0.7) 100%);
   }
 
+  /* Dark mode is the default — no light mode needed */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 220 40% 9%;
+    --foreground: 35 30% 92%;
   }
 }
 
@@ -99,7 +135,209 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
-  body {
-    @apply bg-background text-foreground;
+  html {
+    scroll-behavior: smooth;
   }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     TYPOGRAPHY CLASSES — Use these for consistent text styling
+     
+     .font-display → DM Serif Display (hero titles)
+     .font-serif → Cormorant Garamond (elegant headings)
+     .font-body → Space Grotesk (UI text)
+     .font-script → Parisienne (dates, captions)
+  ═══════════════════════════════════════════════════════════════ */
+  h1, h2, h3 {
+    font-family: 'DM Serif Display', serif;
+  }
+
+  h4, h5, h6 {
+    font-family: 'Cormorant Garamond', serif;
+  }
+}
+
+@layer utilities {
+  /* ═══════════════════════════════════════════════════════════════
+     ATMOSPHERIC EFFECTS — The soul of the visual design
+     
+     .lamp-glow → Warm radial light effect
+     .vignette → Dark edges for cinematic feel
+     .grain → Subtle noise texture
+     .glass → Frosted glass card effect
+  ═══════════════════════════════════════════════════════════════ */
+  .lamp-glow {
+    background: radial-gradient(
+      ellipse 400px 300px at 50% 20%,
+      hsla(38, 60%, 60%, 0.08) 0%,
+      transparent 70%
+    );
+  }
+
+  .lamp-glow-strong {
+    background: radial-gradient(
+      ellipse 500px 400px at 50% 30%,
+      hsla(38, 60%, 60%, 0.15) 0%,
+      transparent 60%
+    );
+  }
+
+  .vignette {
+    box-shadow: inset 0 0 150px 60px hsla(220, 40%, 5%, 0.5);
+  }
+
+  .vignette-strong {
+    box-shadow: inset 0 0 200px 100px hsla(220, 40%, 3%, 0.7);
+  }
+
+  /* Subtle film grain texture */
+  .grain::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+
+  /* Glass morphism for cards */
+  .glass {
+    background: hsla(35, 45%, 93%, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsla(38, 52%, 66%, 0.2);
+  }
+
+  .glass-dark {
+    background: hsla(220, 40%, 12%, 0.9);
+    backdrop-filter: blur(16px);
+    border: 1px solid hsla(38, 52%, 66%, 0.15);
+  }
+
+  /* Heritage paper texture for cards */
+  .paper {
+    background: 
+      linear-gradient(180deg, 
+        hsl(35 45% 94%) 0%, 
+        hsl(35 40% 91%) 100%
+      );
+    box-shadow: 
+      0 1px 3px hsla(220, 40%, 10%, 0.1),
+      0 10px 40px -10px hsla(220, 40%, 10%, 0.2),
+      inset 0 1px 0 hsla(38, 52%, 80%, 0.3);
+  }
+
+  /* Gold accent border */
+  .border-gold {
+    border-color: hsl(var(--gold));
+  }
+
+  .border-gold-subtle {
+    border-color: hsla(38, 52%, 66%, 0.3);
+  }
+
+  /* Text gold gradient */
+  .text-gold-gradient {
+    background: linear-gradient(135deg, hsl(38 60% 70%) 0%, hsl(38 45% 55%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Maroon button gradient */
+  .bg-maroon-gradient {
+    background: linear-gradient(135deg, hsl(2 42% 34%) 0%, hsl(2 50% 28%) 100%);
+  }
+
+  /* Navigation active glow */
+  .nav-active-glow {
+    box-shadow: 
+      0 0 20px hsla(38, 60%, 60%, 0.3),
+      inset 0 0 20px hsla(38, 60%, 60%, 0.1);
+  }
+
+  /* Hover lift animation */
+  .hover-lift {
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), 
+                box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-warm);
+  }
+
+  /* Slow pulse for active states */
+  @keyframes slow-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .animate-slow-pulse {
+    animation: slow-pulse 3s ease-in-out infinite;
+  }
+
+  /* Ambient light drift */
+  @keyframes light-drift {
+    0%, 100% { 
+      background-position: 50% 20%; 
+      opacity: 0.08;
+    }
+    50% { 
+      background-position: 52% 22%; 
+      opacity: 0.12;
+    }
+  }
+
+  .animate-light-drift {
+    animation: light-drift 8s ease-in-out infinite;
+  }
+
+  /* Chandelier flicker */
+  @keyframes chandelier-flicker {
+    0%, 100% { opacity: 1; }
+    92% { opacity: 1; }
+    93% { opacity: 0.8; }
+    94% { opacity: 1; }
+    96% { opacity: 0.9; }
+    97% { opacity: 1; }
+  }
+
+  .animate-chandelier {
+    animation: chandelier-flicker 10s ease-in-out infinite;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR STYLING — Heritage aesthetic
+   Matches the midnight indigo + gold theme
+═══════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(220 40% 9%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsla(38, 52%, 66%, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsla(38, 52%, 66%, 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SELECTION STYLING — Gold highlight
+═══════════════════════════════════════════════════════════════ */
+::selection {
+  background: hsla(38, 52%, 66%, 0.3);
+  color: hsl(35 30% 95%);
 }
