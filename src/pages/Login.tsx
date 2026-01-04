@@ -1,38 +1,15 @@
-/**
- * Login.tsx
- * 
- * THE ENTRANCE — Login/Entry page
- * 
- * This is the first page users see. It sets the atmospheric tone
- * with the heritage interior background, elegant typography,
- * and a dramatic "Enter the House" button.
- * 
- * WHAT IT CONTROLS:
- * - First impression and brand introduction
- * - User name input for personalization
- * - Entry animation sequence
- * 
- * TO MODIFY:
- * - Tagline text → change the paragraph in the card
- * - Button text → update the button label
- * - Card styling → adjust glass/paper classes
- * - Animation timing → modify motion transition values
- */
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useUserStore } from '@/stores/useUserStore';
+import { supabase } from '@/lib/supabase';
+// Removed: import { useUserStore } from '@/stores/useUserStore';
 import { useTimeStore } from '@/stores/useTimeStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AtmosphericBackground } from '@/components/layout/AtmosphericBackground';
 
 /* ═══════════════════════════════════════════════════════════════
-   ANIMATION VARIANTS — Cinematic reveal sequence
-   
-   The login page elements appear in a choreographed sequence.
-   Adjust delay and duration for different pacing.
+   ANIMATION VARIANTS
 ═══════════════════════════════════════════════════════════════ */
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -53,7 +30,7 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: "easeOut" as const,
+      ease: 'easeOut' as const,
     },
   },
 };
@@ -66,104 +43,106 @@ const cardVariants = {
     y: 0,
     transition: {
       duration: 1,
-      ease: "easeOut" as const,
+      ease: 'easeOut' as const,
       delay: 0.3,
     },
   },
 };
 
 export default function Login() {
-  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isEntering, setIsEntering] = useState(false);
+
   const navigate = useNavigate();
-  const enterHouse = useUserStore((state) => state.enterHouse);
+  // Removed: const enterHouse = useUserStore((state) => state.enterHouse);
   const { formattedDate, formattedTime, greeting } = useTimeStore();
 
-  /* ═══════════════════════════════════════════════════════════════
-     ENTER HANDLER — Submits the entry form
-     
-     Sets a brief entering state for exit animation,
-     then navigates to the dashboard.
-     
-     TODO: Replace with backend authentication
-  ═══════════════════════════════════════════════════════════════ */
-  const handleEnter = (e: React.FormEvent) => {
+  // 🔒 HARD-LOCKED EMAIL (Optional: keep this if you still want the frontend gate)
+  const ALLOWED_EMAIL = import.meta.env.VITE_ALLOWED_EMAIL;
+
+  const handleEnter = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+
+    if (!email.trim() || !password.trim()) return;
+
+    // 🔒 Block anyone except the allowed email (Frontend check)
+    if (ALLOWED_EMAIL && email.trim().toLowerCase() !== ALLOWED_EMAIL.toLowerCase()) {
+      alert('Access denied.');
+      return;
+    }
 
     setIsEntering(true);
-    
-    // Brief delay for exit animation
-    setTimeout(() => {
-      enterHouse(name.trim());
-      navigate('/');
-    }, 600);
+
+    // 1. Authenticate with Supabase
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+
+    if (error) {
+      alert(error.message || 'Invalid email or password.');
+      setIsEntering(false);
+      return;
+    }
+
+    // 2. Final safety check (Backend verification)
+    if (ALLOWED_EMAIL && data.user?.email !== ALLOWED_EMAIL) {
+      await supabase.auth.signOut();
+      alert('Unauthorized user.');
+      setIsEntering(false);
+      return;
+    }
+
+    // 3. Success!
+    // Supabase automatically persists the session.
+    // We simply navigate to the home page now.
+    navigate('/');
   };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
-      {/* Atmospheric background */}
       <AtmosphericBackground />
 
-      {/* ═══════════════════════════════════════════════════════════════
-          LOGIN CARD — The gateway
-          
-          Tall, elegant card with glass-like appearance.
-          Contains title, tagline, form, and CTA.
-      ═══════════════════════════════════════════════════════════════ */}
       <motion.div
         variants={cardVariants}
         initial="hidden"
-        animate={isEntering ? { opacity: 0, scale: 1.05, y: -20 } : "visible"}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        animate={isEntering ? { opacity: 0, scale: 1.05, y: -20 } : 'visible'}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
         className="relative z-10 w-full max-w-md mx-4"
       >
         <div className="glass-dark rounded-2xl p-10 border border-gold/20 shadow-deep">
-          {/* ═══════════════════════════════════════════════════════════════
-              HEADER — Title and tagline
-          ═══════════════════════════════════════════════════════════════ */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             className="text-center mb-10"
           >
-            {/* Decorative element */}
-            <motion.div 
-              variants={itemVariants}
-              className="flex justify-center mb-6"
-            >
+            <motion.div variants={itemVariants} className="flex justify-center mb-6">
               <div className="w-16 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
             </motion.div>
 
-            {/* Main title */}
-            <motion.h1 
+            <motion.h1
               variants={itemVariants}
               className="font-display text-4xl md:text-5xl text-gold tracking-wide mb-4"
             >
               House of Swass
             </motion.h1>
 
-            {/* Tagline */}
-            <motion.p 
+            <motion.p
               variants={itemVariants}
               className="font-serif text-lg text-foreground/70 italic leading-relaxed"
             >
-              A private residence for stories,<br />moods, and time.
+              A private residence for stories,
+              <br />
+              moods, and time.
             </motion.p>
 
-            {/* Decorative element */}
-            <motion.div 
-              variants={itemVariants}
-              className="flex justify-center mt-6"
-            >
+            <motion.div variants={itemVariants} className="flex justify-center mt-6">
               <div className="w-24 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
             </motion.div>
           </motion.div>
 
-          {/* ═══════════════════════════════════════════════════════════════
-              FORM — Name input and enter button
-          ═══════════════════════════════════════════════════════════════ */}
           <motion.form
             variants={containerVariants}
             initial="hidden"
@@ -171,21 +150,35 @@ export default function Login() {
             onSubmit={handleEnter}
             className="space-y-6"
           >
+            {/* EMAIL INPUT */}
             <motion.div variants={itemVariants}>
-              <label 
-                htmlFor="name" 
-                className="block font-serif text-sm text-muted-foreground mb-2"
-              >
-                Your name, please
+              <label htmlFor="email" className="block font-serif text-sm text-muted-foreground mb-2">
+                Email
               </label>
               <Input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your name"
-                autoComplete="name"
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                autoComplete="email"
                 autoFocus
+                className="text-center font-body"
+              />
+            </motion.div>
+
+            {/* PASSWORD INPUT */}
+            <motion.div variants={itemVariants}>
+              <label htmlFor="password" className="block font-serif text-sm text-muted-foreground mb-2">
+                Password
+              </label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                autoComplete="current-password"
                 className="text-center font-body"
               />
             </motion.div>
@@ -196,31 +189,23 @@ export default function Login() {
                 variant="hero"
                 size="xl"
                 className="w-full font-serif text-lg tracking-wide"
-                disabled={!name.trim() || isEntering}
+                disabled={!email.trim() || !password.trim() || isEntering}
               >
                 {isEntering ? 'Entering...' : 'Enter the House'}
               </Button>
             </motion.div>
           </motion.form>
 
-          {/* ═══════════════════════════════════════════════════════════════
-              FOOTER — Current date and time
-              
-              Shows real system time to establish time-awareness.
-          ═══════════════════════════════════════════════════════════════ */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             className="mt-10 pt-6 border-t border-gold/10 text-center"
           >
-            <motion.p 
-              variants={itemVariants}
-              className="font-script text-xl text-gold/60"
-            >
+            <motion.p variants={itemVariants} className="font-script text-xl text-gold/60">
               {greeting}
             </motion.p>
-            <motion.p 
+            <motion.p
               variants={itemVariants}
               className="font-body text-sm text-muted-foreground/60 mt-1"
             >
@@ -229,15 +214,11 @@ export default function Login() {
           </motion.div>
         </div>
 
-        {/* ═══════════════════════════════════════════════════════════════
-            AMBIENT GLOW — Behind the card
-            
-            Adds warmth and draws focus to the card.
-        ═══════════════════════════════════════════════════════════════ */}
-        <div 
+        <div
           className="absolute inset-0 -z-10 rounded-2xl opacity-40 blur-3xl"
           style={{
-            background: 'radial-gradient(ellipse at center, hsla(38, 50%, 40%, 0.3) 0%, transparent 70%)',
+            background:
+              'radial-gradient(ellipse at center, hsla(38, 50%, 40%, 0.3) 0%, transparent 70%)',
           }}
         />
       </motion.div>

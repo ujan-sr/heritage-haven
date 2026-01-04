@@ -1,27 +1,23 @@
 /**
  * Navigation.tsx
- * 
- * LEFT PANEL — Hotel Directory Style Navigation
- * 
- * This is the main navigation sidebar with:
+ * * LEFT PANEL — Hotel Directory Style Navigation
+ * * This is the main navigation sidebar with:
  * - Deep indigo gradient background
  * - Gold dividers and accents
  * - Active route highlighting with glow
  * - Smooth hover effects
- * 
- * WHAT IT CONTROLS:
+ * * WHAT IT CONTROLS:
  * - App navigation structure
  * - Active page indication
  * - User quick actions
- * 
- * TO MODIFY:
+ * * TO MODIFY:
  * - Add new routes → add to NAV_ITEMS array
  * - Change active styling → modify the isActive conditional classes
  * - Adjust width → change the w- classes on the nav element
  */
 
 import { motion } from 'framer-motion';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { 
   Home, 
   MapPin, 
@@ -32,7 +28,7 @@ import {
   LogOut
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useUserStore } from '@/stores/useUserStore';
+import { supabase } from '@/lib/supabase';
 
 /* ═══════════════════════════════════════════════════════════════
    NAVIGATION ITEMS — The rooms of the house
@@ -55,31 +51,31 @@ const NAV_ITEMS = [
   },
   { 
     path: '/passport', 
-    label: 'Passport', 
+    label: 'Swassport', 
     icon: MapPin,
     description: 'Places you\'ve visited'
   },
   { 
     path: '/scrapbook', 
-    label: 'Scrapbook', 
+    label: 'Swassbook', 
     icon: BookOpen,
     description: 'Your visual diary'
   },
   { 
-    path: '/tales', 
-    label: 'Tales Vault', 
+    path: '/vault-of-tales', 
+    label: 'Swasshold', 
     icon: Users,
     description: 'Stories with friends'
   },
   { 
     path: '/goals', 
-    label: 'Goals', 
+    label: 'Swassire', 
     icon: Target,
     description: 'Your aspirations'
   },
   { 
-    path: '/treat', 
-    label: 'Treat Wheel', 
+    path: '/treat-wheel', 
+    label: 'Fortuna', 
     icon: Gift,
     description: 'Spin for a surprise'
   },
@@ -113,7 +109,14 @@ const itemVariants = {
 
 export function Navigation() {
   const location = useLocation();
-  const { leaveHouse, user } = useUserStore();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    // The App.tsx subscription will detect the change and redirect,
+    // but we can explicitly navigate to be safe/instant.
+    navigate('/login');
+  };
 
   return (
     <motion.nav
@@ -145,16 +148,15 @@ export function Navigation() {
         >
           House of Swass
         </motion.h1>
-        {user && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="font-script text-lg text-muted-foreground mt-1"
-          >
-            Welcome, {user.name}
-          </motion.p>
-        )}
+        
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          className="font-script text-lg text-muted-foreground mt-1"
+        >
+          Welcome, Swass
+        </motion.p>
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════
@@ -213,7 +215,7 @@ export function Navigation() {
       ═══════════════════════════════════════════════════════════════ */}
       <div className="p-4 border-t border-gold/10">
         <button
-          onClick={() => leaveHouse()}
+          onClick={handleLogout}
           className={cn(
             "flex items-center gap-3 px-4 py-3 rounded-lg w-full",
             "text-muted-foreground/60 font-body text-sm",

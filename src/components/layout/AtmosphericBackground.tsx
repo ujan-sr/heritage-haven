@@ -1,180 +1,115 @@
 /**
  * AtmosphericBackground.tsx
- * 
- * THE VISUAL FOUNDATION — Heritage interior backdrop
- * 
- * This component renders the immersive background with:
- * - Fixed heritage interior image
- * - Dark indigo overlay (multiply blend)
- * - Vignette edges for cinematic depth
- * - Grain texture for film-like quality
- * - Warm lamp glow effects
- * 
- * WHAT IT CONTROLS:
- * - Overall app atmosphere and mood
- * - Background image positioning
- * - Overlay darkness level
- * - Lighting effects intensity
- * 
- * TO MODIFY:
- * - Darken overall mood → increase overlay opacity (line ~35)
- * - Shift lamp glow position → adjust radial gradient center
- * - Reduce grain → lower grain layer opacity
- * - Change image → replace the import path
+ * * UPDATED VISUALS:
+ * - Lighter Indigo Overlay (Better visibility)
+ * - 3-Point Warm Chandelier Lighting (Soft Light blend)
+ * - Softer Radial Vignette
+ * - Ambient Floating Dust Particles
  */
 
 import { motion } from 'framer-motion';
-import heritageInterior from '@/assets/heritage-interior.png';
-
-/* ═══════════════════════════════════════════════════════════════
-   LAYER OPACITIES — Control the atmospheric intensity
-   
-   Adjust these to make the scene lighter or darker:
-   - overlayOpacity: Main darkness (0.85 = 85% dark)
-   - grainOpacity: Film texture intensity
-   - glowOpacity: Warm lamp effect strength
-═══════════════════════════════════════════════════════════════ */
-const overlayOpacity = 0.88;
-const grainOpacity = 0.03;
-const glowOpacity = 0.12;
+// Ensure this path is correct for your project
+import heritageInterior from '@/assets/heritage-interior.png'; 
 
 export function AtmosphericBackground() {
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden">
+    <div className="fixed inset-0 -z-10 overflow-hidden bg-[#0B1220]">
+      
       {/* ═══════════════════════════════════════════════════════════════
           LAYER 1: Heritage Interior Image
-          
-          Fixed position, covers entire viewport.
-          object-cover ensures no stretching.
-          To zoom in: increase scale value
-          To reposition: adjust object-position
+          - Fixed position
+          - Adjusted brightness/saturation as requested
       ═══════════════════════════════════════════════════════════════ */}
-      <motion.img
-        src={heritageInterior}
-        alt=""
-        aria-hidden="true"
-        initial={{ scale: 1.05, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 2, ease: 'easeOut' }}
-        className="absolute inset-0 w-full h-full object-cover object-center"
-        style={{
-          /* Slight desaturation to let overlay colors dominate */
-          filter: 'saturate(0.85) brightness(0.9)',
+      <motion.div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        initial={{ opacity: 0, scale: 1.05 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+        style={{ 
+          backgroundImage: `url(${heritageInterior})`,
+          // Darkened slightly (0.6) so text pops, desaturated (0.85) for vintage feel
+          filter: 'brightness(0.8) saturate(0.85)'
         }}
       />
 
       {/* ═══════════════════════════════════════════════════════════════
-          LAYER 2: Midnight Indigo Overlay
-          
-          Creates the deep, moody atmosphere.
-          mix-blend-multiply darkens while preserving image detail.
-          
-          To darken: increase opacity
-          To shift color: change HSL values
+          LAYER 2: Primary Overlay (Lighter)
+          - Creates the midnight indigo atmosphere but maintains visibility
       ═══════════════════════════════════════════════════════════════ */}
-      <div
+      <div 
         className="absolute inset-0"
-        style={{
-          background: `linear-gradient(
-            180deg,
-            hsla(220, 45%, 8%, ${overlayOpacity}) 0%,
-            hsla(220, 40%, 6%, ${overlayOpacity + 0.05}) 50%,
-            hsla(220, 50%, 4%, ${overlayOpacity + 0.08}) 100%
-          )`,
-          mixBlendMode: 'multiply',
+        style={{ 
+          background: 'linear-gradient(135deg, rgba(11,18,32,0.65) 0%, rgba(11,18,32,0.55) 50%, rgba(11,18,32,0.70) 100%)'
         }}
       />
 
       {/* ═══════════════════════════════════════════════════════════════
-          LAYER 3: Additional Color Tint
-          
-          Adds warmth to shadows, prevents pure black.
-          Normal blend mode for additive color.
+          LAYER 3: Warm Ambient Light (Chandeliers)
+          - Three distinct light sources using soft-light blend
       ═══════════════════════════════════════════════════════════════ */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `linear-gradient(
-            180deg,
-            hsla(220, 40%, 9%, 0.7) 0%,
-            hsla(220, 45%, 7%, 0.85) 100%
-          )`,
-        }}
-      />
-
-      {/* ═══════════════════════════════════════════════════════════════
-          LAYER 4: Warm Lamp Glow (Top Center)
-          
-          Simulates chandelier/lamp light from above.
-          Animated for subtle "breathing" effect.
-          
-          To move light source: change ellipse center position
-          To intensify: increase opacity and spread
-      ═══════════════════════════════════════════════════════════════ */}
-      <motion.div
+      <div 
         className="absolute inset-0 pointer-events-none"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 3, delay: 0.5 }}
-        style={{
-          background: `radial-gradient(
-            ellipse 70% 50% at 50% 15%,
-            hsla(38, 60%, 55%, ${glowOpacity}) 0%,
-            hsla(38, 50%, 45%, ${glowOpacity * 0.5}) 30%,
-            transparent 70%
-          )`,
+        style={{ 
+          background: `
+            radial-gradient(ellipse at 30% 20%, rgba(215,180,122,0.15) 0%, transparent 40%),
+            radial-gradient(ellipse at 70% 30%, rgba(215,180,122,0.12) 0%, transparent 35%),
+            radial-gradient(ellipse at 50% 80%, rgba(215,180,122,0.10) 0%, transparent 30%)
+          `,
+          mixBlendMode: 'soft-light'
         }}
       />
 
       {/* ═══════════════════════════════════════════════════════════════
-          LAYER 5: Secondary Glow (Lower)
-          
-          Adds warm reflection from below chandeliers.
-          Creates depth and ambient fill.
+          LAYER 4: Vignette (Softer)
+          - Radial gradient fading to dark at edges
       ═══════════════════════════════════════════════════════════════ */}
-      <div
-        className="absolute inset-0 pointer-events-none animate-light-drift"
-        style={{
-          background: `radial-gradient(
-            ellipse 60% 40% at 50% 60%,
-            hsla(38, 55%, 50%, 0.04) 0%,
-            transparent 60%
-          )`,
-        }}
-      />
-
-      {/* ═══════════════════════════════════════════════════════════════
-          LAYER 6: Vignette
-          
-          Darkens the edges for cinematic focus.
-          Draws attention to center content.
-          
-          To intensify: increase inset shadow spread
-      ═══════════════════════════════════════════════════════════════ */}
-      <div
+      <div 
         className="absolute inset-0 pointer-events-none"
-        style={{
-          boxShadow: 'inset 0 0 200px 80px hsla(220, 45%, 4%, 0.7)',
+        style={{ 
+          background: 'radial-gradient(ellipse at center, transparent 60%, rgba(11,18,32,0.3) 100%)'
         }}
       />
 
       {/* ═══════════════════════════════════════════════════════════════
-          LAYER 7: Film Grain Texture
-          
-          Adds subtle noise for analog/film feel.
-          Very subtle — should not be distracting.
-          
-          To increase: raise opacity value
-          To remove: delete this entire div
+          LAYER 5: Grain Texture
+          - Subtle noise for film/paper quality
       ═══════════════════════════════════════════════════════════════ */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-          opacity: grainOpacity,
-          mixBlendMode: 'overlay',
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-[0.025]"
+        style={{ 
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
         }}
       />
+
+      {/* ═══════════════════════════════════════════════════════════════
+          LAYER 6: Ambient Floating Particles
+          - Generates 8 distinct particles that float and breathe
+      ═══════════════════════════════════════════════════════════════ */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(8)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 rounded-full"
+            style={{
+              left: `${10 + i * 12}%`,
+              top: `${20 + (i % 3) * 25}%`,
+              backgroundColor: 'rgba(215,180,122,0.15)'
+            }}
+            animate={{
+              y: [-15, 15, -15],
+              opacity: [0.1, 0.3, 0.1],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{
+              duration: 10 + i * 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.5
+            }}
+          />
+        ))}
+      </div>
+
     </div>
   );
 }
